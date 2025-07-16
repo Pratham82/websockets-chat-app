@@ -1,0 +1,46 @@
+# Node
+node_modules/
+node_modules
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Turbo / Nx / Monorepo
+turbo/
+out/
+dist/
+.cache/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Next.js
+.next/
+.next/cache/
+out/
+
+# Tailwind / PostCSS
+.postcssrc
+tailwind.config.js
+tailwind.config.cjs
+postcss.config.js
+postcss.config.cjs
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+
+# VS Code
+.vscode/

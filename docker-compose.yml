@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: websocket_chat
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+  backend:
+    build:
+      context: ./apps/server
+    container_name: websocket_server
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/websocket_chat
+    depends_on:
+      - db
+    ports:
+      - "4000:4000"
+    command: npm run dev
+
+  frontend:
+    build:
+      context: ./apps/web
+    container_name: websocket_web
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    command: npm run dev
+
+volumes:
+  postgres_data:

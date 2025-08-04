@@ -1,21 +1,19 @@
 import { useEffect, useState } from "react"
-import { useRouter } from "next/router"
-import socket from "../../lib/socket"
+import socket from "@/lib/socket"
 import { v4 as uuid } from "uuid"
 import type { ChatMessage } from "@shared/types"
-import { useAuth } from "../contexts/AuthContext"
 
 export default function Home() {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [text, setText] = useState("")
-  const { user, logout, isLoading } = useAuth()
-  const router = useRouter()
+  const [sender, setSender] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!isLoading && !user) {
-      router.push("/login")
-    }
-  }, [user, isLoading, router])
+    const storedName = localStorage.getItem("sender")
+    const name = storedName || `User-${Math.floor(Math.random() * 1000)}`
+    setSender(name)
+    localStorage.setItem("sender", name)
+  }, [])
 
   useEffect(() => {
     socket.on("message", (msg: ChatMessage) => {
@@ -28,12 +26,12 @@ export default function Home() {
   }, [])
 
   const sendMessage = () => {
-    if (!text.trim() || !user) return
+    if (!text.trim()) return
 
     const msg: ChatMessage = {
       id: uuid(),
       text,
-      sender: user.username,
+      sender,
       timestamp: Date.now(),
     }
 
@@ -42,31 +40,11 @@ export default function Home() {
     setText("")
   }
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">Loading...</div>
-      </div>
-    )
-  }
-
-  if (!user) {
-    return null
-  }
-
   return (
     <main className="max-w-2xl mx-auto p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">
-          Chat as <span className="text-blue-600">{user.username}</span>
-        </h1>
-        <button
-          onClick={logout}
-          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-        >
-          Logout
-        </button>
-      </div>
+      <h1 className="text-2xl font-bold mb-4">
+        Chat as <span className="text-blue-600">{sender}</span>
+      </h1>
       <div className="space-y-2 mb-4 max-h-96 overflow-y-auto border rounded p-4 bg-gray-50">
         {messages.map(msg => (
           <div key={msg.id} className="text-sm">

@@ -3,6 +3,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["apps/web/*"],
+      "@/src/*": ["apps/web/src/*"],
       "@shared/*": ["packages/shared/*"]
     },
     "moduleResolution": "node",

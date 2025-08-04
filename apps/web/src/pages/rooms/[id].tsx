@@ -178,7 +178,7 @@ export default function RoomChat() {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Link href="/" className="text-gray-400 hover:text-gray-600 mr-3">
-              ← Back
+              ←
             </Link>
             <div>
               <h1 className="text-xl font-semibold text-gray-800">

@@ -147,13 +147,15 @@ routes/
 ├── messages.ts    # Send, Get messages
 ```
 
+## DB Schema
+
+![Schema](/assets/db_schema.png)
+
+## Screenshots
+
+![Home](/assets/ui1.png)
+![Rooms](/assets/ui2.png)
+
 ## 📄 License
 
 MIT © \[Pratham82]
-
-```
-
----
-
-Let me know if you want a sample `docker-compose.yml` tailored to this setup.
-```

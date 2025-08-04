@@ -26,7 +26,7 @@ export default function Home() {
   }, [])
 
   const sendMessage = () => {
-    if (!text.trim()) return
+    if (!text.trim() || !sender) return
 
     const msg: ChatMessage = {
       id: uuid(),
@@ -40,32 +40,72 @@ export default function Home() {
     setText("")
   }
 
+  console.log({ messages })
+
   return (
-    <main className="max-w-2xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">
-        Chat as <span className="text-blue-600">{sender}</span>
-      </h1>
-      <div className="space-y-2 mb-4 max-h-96 overflow-y-auto border rounded p-4 bg-gray-50">
-        {messages.map(msg => (
-          <div key={msg.id} className="text-sm">
-            <span className="font-semibold">{msg.sender}:</span> {msg.text}
-            <span className="text-gray-400 text-xs ml-2">
-              {new Date(msg.timestamp).toLocaleTimeString()}
-            </span>
-          </div>
-        ))}
+    <div className="h-screen flex flex-col bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 p-4 shadow-sm">
+        <h1 className="text-xl font-semibold text-gray-800">
+          Chat as <span className="text-blue-600">{sender}</span>
+        </h1>
       </div>
-      <div className="flex gap-2">
-        <input
-          value={text}
-          onChange={e => setText(e.target.value)}
-          className="flex-1 border px-3 py-2 rounded"
-          placeholder="Type a message"
-        />
-        <button onClick={sendMessage} className="bg-blue-600 text-white px-4 py-2 rounded">
-          Send
-        </button>
+
+      {/* Messages Container */}
+      <div className="flex-1 border-red-500 overflow-y-auto p-4 space-y-3">
+        {messages.map(msg => {
+          const isCurrentUser = msg.sender === sender
+          return (
+            <div
+              key={msg.id}
+              className={`flex ${
+                isCurrentUser ? "justify-end" : "justify-start"
+              }`}
+            >
+              <div
+                className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                  isCurrentUser
+                    ? "bg-blue-600 text-white"
+                    : "bg-white text-gray-800 border border-gray-200"
+                }`}
+              >
+                {!isCurrentUser && (
+                  <div className="text-xs font-semibold text-gray-600 mb-1">
+                    {msg.sender}
+                  </div>
+                )}
+                <div className="text-sm">{msg.text}</div>
+                <div
+                  className={`text-xs mt-1 ${
+                    isCurrentUser ? "text-blue-100" : "text-gray-500"
+                  }`}
+                >
+                  {new Date(msg.timestamp).toLocaleTimeString()}
+                </div>
+              </div>
+            </div>
+          )
+        })}
       </div>
-    </main>
+
+      {/* Input Container */}
+      <div className="bg-white border-t border-gray-200 p-4">
+        <div className="flex gap-2">
+          <input
+            value={text}
+            onChange={e => setText(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && sendMessage()}
+            className="flex-1 border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Type a message..."
+          />
+          <button
+            onClick={sendMessage}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
+          >
+            Send
+          </button>
+        </div>
+      </div>
+    </div>
   )
 }

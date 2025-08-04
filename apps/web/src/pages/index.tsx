@@ -1,13 +1,9 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useRouter } from "next/router"
-import socket from "../../lib/socket"
-import { v4 as uuid } from "uuid"
-import type { ChatMessage } from "@shared/types"
 import { useAuth } from "../contexts/AuthContext"
+import { RoomList } from "../components/RoomList"
 
 export default function Home() {
-  const [messages, setMessages] = useState<ChatMessage[]>([])
-  const [text, setText] = useState("")
   const { user, logout, isLoading } = useAuth()
   const router = useRouter()
 
@@ -16,31 +12,6 @@ export default function Home() {
       router.push("/login")
     }
   }, [user, isLoading, router])
-
-  useEffect(() => {
-    socket.on("message", (msg: ChatMessage) => {
-      setMessages(prev => [...prev, msg])
-    })
-
-    return () => {
-      socket.off("message")
-    }
-  }, [])
-
-  const sendMessage = () => {
-    if (!text.trim() || !user) return
-
-    const msg: ChatMessage = {
-      id: uuid(),
-      text,
-      sender: user.username,
-      timestamp: Date.now(),
-    }
-
-    setMessages(prev => [...prev, msg])
-    socket.emit("message", msg)
-    setText("")
-  }
 
   if (isLoading) {
     return (
@@ -55,39 +26,26 @@ export default function Home() {
   }
 
   return (
-    <main className="max-w-2xl mx-auto p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">
-          Chat as <span className="text-blue-600">{user.username}</span>
-        </h1>
-        <button
-          onClick={logout}
-          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-        >
-          Logout
-        </button>
+    <div className="h-screen flex flex-col bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200 p-4 shadow-sm">
+        <div className="flex justify-between items-center">
+          <h1 className="text-xl font-semibold text-gray-800">
+            Welcome, <span className="text-blue-600">{user.username}</span>
+          </h1>
+          <button
+            onClick={logout}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
+          >
+            Logout
+          </button>
+        </div>
       </div>
-      <div className="space-y-2 mb-4 max-h-96 overflow-y-auto border rounded p-4 bg-gray-50">
-        {messages.map(msg => (
-          <div key={msg.id} className="text-sm">
-            <span className="font-semibold">{msg.sender}:</span> {msg.text}
-            <span className="text-gray-400 text-xs ml-2">
-              {new Date(msg.timestamp).toLocaleTimeString()}
-            </span>
-          </div>
-        ))}
+
+      {/* Room List */}
+      <div className="flex-1">
+        <RoomList />
       </div>
-      <div className="flex gap-2">
-        <input
-          value={text}
-          onChange={e => setText(e.target.value)}
-          className="flex-1 border px-3 py-2 rounded"
-          placeholder="Type a message"
-        />
-        <button onClick={sendMessage} className="bg-blue-600 text-white px-4 py-2 rounded">
-          Send
-        </button>
-      </div>
-    </main>
+    </div>
   )
 }

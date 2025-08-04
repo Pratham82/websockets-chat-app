@@ -1,4 +1,7 @@
-export type ChatMessage = {
+export interface ChatMessage {
+  id: string
+  text: string
   sender: string
+  timestamp: number
   message: string
 }

@@ -1,6 +1,6 @@
 ---
-
 # WebSocket Chat App 💬
+---
 
 A full-stack real-time chat application built with:
 

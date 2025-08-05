@@ -37,7 +37,7 @@ const router = express.Router()
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.post('/register', async (req, res) => {
+router.post('/register', async (req: express.Request, res: express.Response) => {
   try {
     const { username, email, password } = req.body
 
@@ -126,7 +126,7 @@ router.post('/register', async (req, res) => {
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.post('/login', async (req, res) => {
+router.post('/login', async (req: express.Request, res: express.Response) => {
   try {
     const { username, password } = req.body
 

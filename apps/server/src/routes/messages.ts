@@ -1,12 +1,12 @@
 import express from 'express'
 import { query } from '../db'
 import { authenticateToken, type AuthRequest } from '../middleware/auth'
-import type { SendMessageRequest, GetMessagesQuery, Message } from '@shared/types'
+import type { SendMessageRequest } from '@shared/types'
 
 const router = express.Router()
 
 // Get messages for a room with pagination
-router.get('/:roomId', authenticateToken, async (req: AuthRequest, res) => {
+router.get('/:roomId', authenticateToken, async (req: AuthRequest, res: express.Response) => {
   try {
     const roomId = parseInt(req.params.roomId)
     const userId = req.user?.userId
@@ -57,7 +57,7 @@ router.get('/:roomId', authenticateToken, async (req: AuthRequest, res) => {
 })
 
 // Send message to room
-router.post('/:roomId', authenticateToken, async (req: AuthRequest, res) => {
+router.post('/:roomId', authenticateToken, async (req: AuthRequest, res: express.Response) => {
   try {
     const roomId = parseInt(req.params.roomId)
     const userId = req.user?.userId
@@ -101,7 +101,7 @@ router.post('/:roomId', authenticateToken, async (req: AuthRequest, res) => {
 })
 
 // Delete message (soft delete)
-router.delete('/:roomId/:messageId', authenticateToken, async (req: AuthRequest, res) => {
+router.delete('/:roomId/:messageId', authenticateToken, async (req: AuthRequest, res: express.Response) => {
   try {
     const roomId = parseInt(req.params.roomId)
     const messageId = parseInt(req.params.messageId)

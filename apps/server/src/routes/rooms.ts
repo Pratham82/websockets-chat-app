@@ -1,12 +1,12 @@
 import express from 'express'
 import { query } from '../db'
 import { authenticateToken, type AuthRequest } from '../middleware/auth'
-import type { CreateRoomRequest, Room, RoomMember } from '@shared/types'
+import type { CreateRoomRequest } from '@shared/types'
 
 const router = express.Router()
 
 // Get all rooms (public rooms + rooms user is a member of)
-router.get('/', authenticateToken, async (req: AuthRequest, res) => {
+router.get('/', authenticateToken, async (req: AuthRequest, res: express.Response) => {
   try {
     const userId = req.user?.userId
 
@@ -33,7 +33,7 @@ router.get('/', authenticateToken, async (req: AuthRequest, res) => {
 })
 
 // Get specific room details
-router.get('/:id', authenticateToken, async (req: AuthRequest, res) => {
+router.get('/:id', authenticateToken, async (req: AuthRequest, res: express.Response) => {
   try {
     const roomId = parseInt(req.params.id)
     const userId = req.user?.userId
@@ -62,7 +62,7 @@ router.get('/:id', authenticateToken, async (req: AuthRequest, res) => {
 })
 
 // Create new room
-router.post('/', authenticateToken, async (req: AuthRequest, res) => {
+router.post('/', authenticateToken, async (req: AuthRequest, res: express.Response) => {
   try {
     const { name, description, is_private = false }: CreateRoomRequest = req.body
     const userId = req.user?.userId
@@ -108,7 +108,7 @@ router.post('/', authenticateToken, async (req: AuthRequest, res) => {
 })
 
 // Join room
-router.post('/:id/join', authenticateToken, async (req: AuthRequest, res) => {
+router.post('/:id/join', authenticateToken, async (req: AuthRequest, res: express.Response) => {
   try {
     const roomId = parseInt(req.params.id)
     const userId = req.user?.userId
@@ -145,7 +145,7 @@ router.post('/:id/join', authenticateToken, async (req: AuthRequest, res) => {
 })
 
 // Leave room
-router.delete('/:id/leave', authenticateToken, async (req: AuthRequest, res) => {
+router.delete('/:id/leave', authenticateToken, async (req: AuthRequest, res: express.Response) => {
   try {
     const roomId = parseInt(req.params.id)
     const userId = req.user?.userId
@@ -172,7 +172,7 @@ router.delete('/:id/leave', authenticateToken, async (req: AuthRequest, res) => 
 })
 
 // Get room members
-router.get('/:id/members', authenticateToken, async (req: AuthRequest, res) => {
+router.get('/:id/members', authenticateToken, async (req: AuthRequest, res: express.Response) => {
   try {
     const roomId = parseInt(req.params.id)
     const userId = req.user?.userId

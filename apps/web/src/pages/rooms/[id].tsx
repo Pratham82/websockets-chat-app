@@ -69,7 +69,8 @@ export default function RoomChat() {
       setMessages(messagesData.messages)
       setHasMore(messagesData.hasMore)
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to load room"
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to load room"
       setError(errorMessage)
       if (
         errorMessage.includes("not found") ||
@@ -128,7 +129,8 @@ export default function RoomChat() {
 
       setText("")
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to send message"
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to send message"
       setError(errorMessage)
     } finally {
       setSending(false)

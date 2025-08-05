@@ -4,7 +4,8 @@ import { Server } from "socket.io"
 import cors from "cors"
 import dotenv from "dotenv"
 
-import { ChatMessage } from "@shared/types"
+// import { ChatMessage } from "@shared/types"
+import { ChatMessage } from "./types"
 import { initDB } from "./db"
 import authRoutes from "./routes/auth"
 import roomRoutes from "./routes/rooms"
@@ -18,14 +19,16 @@ const server = http.createServer(app)
 const io = new Server(server, {
   cors: {
     origin: process.env.CORS_ORIGIN || "*",
-    methods: ["GET", "POST"]
+    methods: ["GET", "POST"],
   },
 })
 
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || "*",
-  credentials: true
-}))
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || "*",
+    credentials: true,
+  })
+)
 app.use(express.json())
 app.use("/api/auth", authRoutes)
 app.use("/api/rooms", roomRoutes)
@@ -40,11 +43,11 @@ io.on("connection", socket => {
   socket.on("join-room", (roomId: string) => {
     socket.join(`room-${roomId}`)
     console.log(`User ${socket.id} joined room ${roomId}`)
-    
+
     // Notify others in the room
     socket.to(`room-${roomId}`).emit("user-joined", {
       socketId: socket.id,
-      roomId
+      roomId,
     })
   })
 
@@ -52,24 +55,24 @@ io.on("connection", socket => {
   socket.on("leave-room", (roomId: string) => {
     socket.leave(`room-${roomId}`)
     console.log(`User ${socket.id} left room ${roomId}`)
-    
+
     // Notify others in the room
     socket.to(`room-${roomId}`).emit("user-left", {
       socketId: socket.id,
-      roomId
+      roomId,
     })
   })
 
   // Handle room-based messages
-  socket.on("room-message", (data: { roomId: string, message: any }) => {
+  socket.on("room-message", (data: { roomId: string; message: any }) => {
     console.log("Room message received:", data)
-    
+
     // Broadcast to all users in the room except sender
     socket.to(`room-${data.roomId}`).emit("room-message", data.message)
   })
 
   // Handle typing indicators
-  socket.on("typing", (data: { roomId: string, username: string, isTyping: boolean }) => {
+  socket.on("typing", (data: { roomId: string; username: string; isTyping: boolean }) => {
     socket.to(`room-${data.roomId}`).emit("typing", data)
   })
 
@@ -93,7 +96,7 @@ const startServer = async () => {
       console.log(`Server listening on http://localhost:${PORT}`)
     })
   } catch (error) {
-    console.error('Failed to start server:', error)
+    console.error("Failed to start server:", error)
     process.exit(1)
   }
 }

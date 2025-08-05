@@ -1,5 +1,3 @@
-Here is your **final `README.md`** — fully cleaned up and production-ready:
-
 ---
 
 # WebSocket Chat App 💬

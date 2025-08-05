@@ -3,7 +3,7 @@ export interface ChatMessage {
   text: string
   sender: string
   timestamp: number
-  message: string
+  message?: string
 }
 
 export interface Room {
@@ -23,7 +23,7 @@ export interface Message {
   room_id: number
   user_id: number
   content: string
-  message_type: 'text' | 'image' | 'file'
+  message_type: "text" | "image" | "file"
   created_at: string
   updated_at: string
   deleted_at?: string
@@ -34,7 +34,7 @@ export interface RoomMember {
   id: number
   room_id: number
   user_id: number
-  role: 'admin' | 'moderator' | 'member'
+  role: "admin" | "moderator" | "member"
   joined_at: string
   username?: string
 }
@@ -47,7 +47,7 @@ export interface CreateRoomRequest {
 
 export interface SendMessageRequest {
   content: string
-  message_type?: 'text' | 'image' | 'file'
+  message_type?: "text" | "image" | "file"
 }
 
 export interface GetMessagesQuery {

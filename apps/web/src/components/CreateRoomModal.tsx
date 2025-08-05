@@ -2,10 +2,17 @@ import { useState } from "react"
 
 interface CreateRoomModalProps {
   onClose: () => void
-  onCreateRoom: (roomData: { name: string; description?: string; is_private?: boolean }) => Promise<void>
+  onCreateRoom: (roomData: {
+    name: string
+    description?: string
+    is_private?: boolean
+  }) => Promise<void>
 }
 
-export function CreateRoomModal({ onClose, onCreateRoom }: CreateRoomModalProps) {
+export function CreateRoomModal({
+  onClose,
+  onCreateRoom,
+}: CreateRoomModalProps) {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [isPrivate, setIsPrivate] = useState(false)
@@ -14,7 +21,7 @@ export function CreateRoomModal({ onClose, onCreateRoom }: CreateRoomModalProps)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!name.trim()) {
       setError("Room name is required")
       return
@@ -23,14 +30,15 @@ export function CreateRoomModal({ onClose, onCreateRoom }: CreateRoomModalProps)
     try {
       setLoading(true)
       setError("")
-      
+
       await onCreateRoom({
         name: name.trim(),
         description: description.trim() || undefined,
-        is_private: isPrivate
+        is_private: isPrivate,
       })
-    } catch (err: any) {
-      setError(err.message || "Failed to create room")
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to create room"
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }
@@ -51,7 +59,10 @@ export function CreateRoomModal({ onClose, onCreateRoom }: CreateRoomModalProps)
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="roomName" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="roomName"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Room Name *
             </label>
             <input
@@ -66,7 +77,10 @@ export function CreateRoomModal({ onClose, onCreateRoom }: CreateRoomModalProps)
           </div>
 
           <div className="mb-4">
-            <label htmlFor="roomDescription" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="roomDescription"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Description
             </label>
             <textarea
@@ -88,7 +102,9 @@ export function CreateRoomModal({ onClose, onCreateRoom }: CreateRoomModalProps)
                 onChange={e => setIsPrivate(e.target.checked)}
                 className="mr-2"
               />
-              <span className="text-sm text-gray-700">Make this room private</span>
+              <span className="text-sm text-gray-700">
+                Make this room private
+              </span>
             </label>
             <p className="text-xs text-gray-500 mt-1">
               Private rooms require invitation to join

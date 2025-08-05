@@ -22,7 +22,7 @@ export function RoomList() {
       const roomsData = await roomAPI.getRooms()
       setRooms(roomsData)
       setError("")
-    } catch (err) {
+    } catch (err: unknown) {
       setError("Failed to load rooms")
       console.error(err)
     } finally {
@@ -48,8 +48,9 @@ export function RoomList() {
             : room
         )
       )
-    } catch (err: any) {
-      setError(err.message || "Failed to join room")
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to join room"
+      setError(errorMessage)
     }
   }
 
@@ -59,8 +60,9 @@ export function RoomList() {
       setRooms(prev => [newRoom, ...prev])
       setShowCreateModal(false)
       router.push(`/rooms/${newRoom.id}`)
-    } catch (err: any) {
-      throw new Error(err.message)
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to create room"
+      throw new Error(errorMessage)
     }
   }
 

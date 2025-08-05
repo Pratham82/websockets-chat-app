@@ -68,11 +68,12 @@ export default function RoomChat() {
       setRoom(roomData)
       setMessages(messagesData.messages)
       setHasMore(messagesData.hasMore)
-    } catch (err: any) {
-      setError(err.message || "Failed to load room")
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to load room"
+      setError(errorMessage)
       if (
-        err.message.includes("not found") ||
-        err.message.includes("Access denied")
+        errorMessage.includes("not found") ||
+        errorMessage.includes("Access denied")
       ) {
         router.push("/")
       }
@@ -94,7 +95,7 @@ export default function RoomChat() {
 
       setMessages(prev => [...messagesData.messages, ...prev])
       setHasMore(messagesData.hasMore)
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Failed to load more messages:", err)
     } finally {
       setLoadingMore(false)
@@ -126,8 +127,9 @@ export default function RoomChat() {
       })
 
       setText("")
-    } catch (err: any) {
-      setError(err.message || "Failed to send message")
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to send message"
+      setError(errorMessage)
     } finally {
       setSending(false)
     }

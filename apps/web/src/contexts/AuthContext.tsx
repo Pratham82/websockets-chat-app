@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(data.user)
       setIsLoading(false)
       return true
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Login error:", error)
       setIsLoading(false)
       return false
@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(data.user)
       setIsLoading(false)
       return true
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Registration error:", error)
       setIsLoading(false)
       return false

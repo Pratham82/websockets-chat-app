@@ -17,11 +17,15 @@ const app = express()
 const server = http.createServer(app)
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: process.env.CORS_ORIGIN || "*",
+    methods: ["GET", "POST"]
   },
 })
 
-app.use(cors())
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || "*",
+  credentials: true
+}))
 app.use(express.json())
 app.use("/api/auth", authRoutes)
 app.use("/api/rooms", roomRoutes)
